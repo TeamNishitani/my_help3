@@ -3,7 +3,7 @@ require "fileutils"
 
 module MyHelp
   RSpec.describe Config do
-    describe "config" do
+    describe "クラス変数config" do
       let(:tmp_conf) {
         Config.new
       }
@@ -18,22 +18,22 @@ module MyHelp
       end
     end
 
-    describe "configure" do
+    describe "configを変更するconfigure" do
       let(:tmp_conf) {
         Config.new
       }
-      it ":extに'.md'を正しく設定できる" do
-        expect(tmp_conf.configure(ext: ".md")[:ext]).to eq(".md")
-      end
       it "間違ったkey(:dir)を設定するとKeyErrorが返る" do
         file_path = "hoge"
         expect {
           tmp_conf.configure(dir: file_path)
         }.to raise_error(KeyError)
       end
-    end
-
-    shared_context "create config with path" do
+      it ":extに'.md'を正しく設定できる" do
+        expect(tmp_conf.configure(ext: ".md")[:ext]).to eq(".md")
+      end
+      it ":editorに'code'を正しく設定できる" do
+        expect(tmp_conf.configure(editor: "code")[:editor]).to eq("code")
+      end
     end
 
     describe "pathを指定してconfigure" do
@@ -44,7 +44,6 @@ module MyHelp
       let(:tmp_conf) {
         Config.new(path)
       }
-      #      include_context "create config with path"
       it ":extに'.org'が正しく設定されている" do
         expect(tmp_conf.config[:ext]).to eq(".org")
       end

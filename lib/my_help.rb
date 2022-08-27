@@ -3,33 +3,21 @@
 require_relative "my_help/version"
 require_relative "my_help/list"
 require_relative "my_help/config"
+require_relative "my_help/modify"
+require_relative "my_help/init"
+
+require "thor"
 
 module MyHelp
   class Error < StandardError; end
 
   # Your code goes here...
-  class Modify
-    def initialize(path = "", ext = ".org")
-      @path = path
-      @ext = ext
-    end
+  class CLI < Thor
+    desc "version", "show version"
 
-    def new(help_name)
-      # argument => 引数
-      # verbose => 饒舌（おしゃべりな）
-      target = File.join(@path, help_name + @ext)
-      source = File.join(@path, "example.org")
-      FileUtils.cp(source, target, verbose: false)
-    end
-
-    def delete(help_name)
-      target = File.join(@path, help_name + @ext)
-      FileUtils.rm(target, verbose: false)
-    end
-
-    def edit(help_name)
-      target = File.join(@path, help_name + @ext)
-      system("emacs #{target}")
+    def version
+      #invoke :setup
+      puts VERSION
     end
   end
 end

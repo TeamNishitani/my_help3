@@ -6,7 +6,7 @@ module MyHelp
       File.join(File.dirname(__FILE__),
                 "../../lib/templates")
     }
-    describe "振る舞い" do
+    describe "個別のヘルプをいじる" do
       it "ヘルプをnewする" do
         help_name = "example_2"
         Modify.new(templates_path).new(help_name)
