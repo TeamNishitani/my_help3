@@ -1,5 +1,3 @@
-require "yaml"
-
 module MyHelp
 
   # make @config from default and load yaml
@@ -8,11 +6,12 @@ module MyHelp
   class Config
     # Configuration defaults
     def initialize(conf_path = nil)
-      conf_path ||= File.join(ENV["HOME"], ".my_help")
+      conf_path ||= ENV["HOME"]
+      local_help_dir = File.join(conf_path, ".my_help")
       @config = {
         template_dir: File.expand_path("../templates", __dir__),
-        local_help_dir: File.join(conf_path),
-        conf_file: File.join(conf_path, ".my_help_conf.yml"),
+        local_help_dir: local_help_dir,
+        conf_file: File.join(local_help_dir, ".my_help_conf.yml"),
         editor: ENV["EDITOR"] || "emacs",
         ext: ".org",
       }
@@ -51,9 +50,8 @@ module MyHelp
     end
 
     # save config in  @config[:conf_file]
-    def save_config(path = nil)
-      path ||= @config[:conf_file]
-      File.write(path, YAML.dump(config))
+    def save_config()
+      File.write(@config[:conf_file], YAML.dump(config))
     end
 
     attr_reader :config

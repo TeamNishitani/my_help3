@@ -4,8 +4,9 @@ require "fileutils"
 module MyHelp
   RSpec.describe Config do
     describe "クラス変数config" do
+      include_context :uses_temp_dir
       let(:tmp_conf) {
-        Config.new
+        Config.new(temp_dir)
       }
       it "default confを返す" do
         expect(tmp_conf.config[:ext]).to eq(".org")
@@ -36,21 +37,21 @@ module MyHelp
       end
     end
 
-    describe "pathを指定してconfigure" do
-      let(:path) {
-        path = File.join(File.dirname(__dir__),
-                         "../lib/templates")
-      }
+    describe "temp_dirを指定してconfigure" do
+      include_context :uses_temp_dir
       let(:tmp_conf) {
-        Config.new(path)
+        Config.new(temp_dir)
       }
+      it ":local_help_dirにpathが正しく設定されている" do
+        expect(tmp_conf.config[:local_help_dir]).to eq(File.join(temp_dir, ".my_help"))
+      end
       it ":extに'.org'が正しく設定されている" do
         expect(tmp_conf.config[:ext]).to eq(".org")
       end
-      it "pathに.my_help_conf.ymlを保存する" do
+      it ":local_help_dirに.my_help_conf.ymlを保存する" do
+        Dir.mkdir(tmp_conf.config[:local_help_dir])
         tmp_conf.save_config()
-        expect(File.exist?(File.join(path, ".my_help_conf.yml"))).to be_truthy
-        FileUtils.rm(File.join(path, ".my_help_conf.yml"))
+        expect(File.exist?(File.join(temp_dir, ".my_help", ".my_help_conf.yml"))).to be_truthy
       end
     end
   end
