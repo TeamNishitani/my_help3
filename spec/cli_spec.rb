@@ -23,6 +23,24 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     it { expect(last_command_started).to have_output(/my_help help/) }
   end
 
+  context "init option" do
+    include_context :uses_temp_dir
+    before(:each) { run_command("my_help init #{temp_dir}") }
+    #before(:each) { stop_all_commands }
+    #after { all_commands.each(&:stop) }
+
+    it "confとhelpsが:local_help_dirに保存される" do
+      type "emacs\n"
+      type ".md\n"
+      stop_all_commands
+      conf_file = File.join(temp_dir, ".my_help", ".my_help_conf.yml")
+      expect(File.exist?(conf_file)).to be_truthy
+      puts File.read(conf_file)
+    end
+    #    it ":editor/:extのsetupは，arubaでのrspecがわからなかったので，後で修正するようにputs"
+    #    it "set :extで'.md'にすると，initしてもlistで表示されない"
+  end
+
   context "set editor code" do
     include_context :uses_temp_dir
     before(:each) { FileUtils.mkdir(File.join(temp_dir, ".my_help")) }
@@ -51,12 +69,15 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
   describe "# run_command interfactiveの例" do
     context "hello 'bob'に反応する" do
       before { run_command("my_help hello") }
+      #      before(:each) { stop_all_commands }
 
       after { all_commands.each(&:stop) }
 
       it "type bobでHello bobが返る" do
-        type "bob\n"
-        #        type "\u0004"
+        type "bob"
+        type "\u0004"
+        type "bob"
+        type "\u0004"
         expect(last_command_started).to have_output "Hello bob."
       end
     end

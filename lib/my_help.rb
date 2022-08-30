@@ -33,27 +33,21 @@ module MyHelp
     desc "init", "init"
 
     def init(*args)
-      args[0] ||= ENV["HOME"]
-      config = Config.new(args[0])
+      help_dir = args[-1]
+      help_dir = ENV["HOME"] unless File.exist?(help_dir)
+      config = Config.new(help_dir)
       #config.ask_default
       init = Init.new(config.config)
       raise "Local help dir exist." if init.check_dir_exist
       puts "Choose default editor 'emacs' [Y or 'code']? "
-      responce = $stdin.gets.chomp.upcase
-      p responce[0]
-      config.config[:editor] = responce unless responce[0] == "Y"
+      responce = $stdin.gets.chomp
+      config.config[:editor] = responce unless responce.upcase[0] == "Y"
       puts "Choose default markup '.org' [Y or '.md']? "
-      responce = $stdin.gets.chomp.upcase
-      p responce[0]
-      config.config[:ext] = responce unless responce[0] == "Y"
+      responce = $stdin.gets.chomp
+      config.config[:ext] = responce unless responce.upcase[0] == "Y"
       init.mk_help_dir
       config.save_config
       init.cp_templates
-      puts "editor and ext were set 'emacs' and '.org'."
-      puts "please change them as follows:"
-      puts "   my_help set editor 'emacs -nw'"
-      puts "   my_help set editor code"
-      puts "   my_help set ext .md"
     end
 
     desc "set [:key] [VAL]", "set editor or ext"
@@ -83,6 +77,8 @@ module MyHelp
     desc "hello", "hello"
 
     def hello
+      name = $stdin.gets.chomp
+      #      puts("Hello #{name}.")
       name = $stdin.gets.chomp
       puts("Hello #{name}.")
     end
