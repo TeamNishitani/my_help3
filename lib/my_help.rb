@@ -39,15 +39,13 @@ module MyHelp
       #config.ask_default
       init = Init.new(config.config)
       raise "Local help dir exist." if init.check_dir_exist
-      puts "Choose default editor 'emacs' [Y or 'code']? "
-      responce = $stdin.gets.chomp
-      config.config[:editor] = responce unless responce.upcase[0] == "Y"
       puts "Choose default markup '.org' [Y or '.md']? "
       responce = $stdin.gets.chomp
-      config.config[:ext] = responce unless responce.upcase[0] == "Y"
+      config.configure(:ext => responce) unless responce.upcase[0] == "Y"
       init.mk_help_dir
       config.save_config
       init.cp_templates
+      puts "If you want change editor use my_help set editor 'code'"
     end
 
     desc "set [:key] [VAL]", "set editor or ext"
@@ -77,8 +75,6 @@ module MyHelp
     desc "hello", "hello"
 
     def hello
-      name = $stdin.gets.chomp
-      #      puts("Hello #{name}.")
       name = $stdin.gets.chomp
       puts("Hello #{name}.")
     end

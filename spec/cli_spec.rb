@@ -30,15 +30,17 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     #after { all_commands.each(&:stop) }
 
     it "confとhelpsが:local_help_dirに保存される" do
-      type "emacs\n"
+      #      type "emacs\n
       type ".md\n"
+      #      close_input
       stop_all_commands
       conf_file = File.join(temp_dir, ".my_help", ".my_help_conf.yml")
       expect(File.exist?(conf_file)).to be_truthy
       puts File.read(conf_file)
+      example_file = File.join(temp_dir, ".my_help", "example.md")
+      expect(File.exist?(example_file)).to be_truthy
     end
-    #    it ":editor/:extのsetupは，arubaでのrspecがわからなかったので，後で修正するようにputs"
-    #    it "set :extで'.md'にすると，initしてもlistで表示されない"
+    it ":editor/:extの複数setupは，arubaでのrspecがわからなかったので，後で修正するようにputs"
   end
 
   context "set editor code" do
@@ -62,6 +64,9 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
         type "Hello"
         type "\u0004"
         expect(last_command_started).to have_output "Hello"
+        type "Hello"
+        type "\u0004"
+        expect(last_command_started).to have_output "Hello"
       end
     end
   end
@@ -74,10 +79,9 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
       after { all_commands.each(&:stop) }
 
       it "type bobでHello bobが返る" do
-        type "bob"
-        type "\u0004"
-        type "bob"
-        type "\u0004"
+        type "bob\n"
+        #        type "\u0004"
+        close_input
         expect(last_command_started).to have_output "Hello bob."
       end
     end
