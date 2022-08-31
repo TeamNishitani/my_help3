@@ -6,15 +6,15 @@ module MyHelp
     describe "クラス変数config" do
       include_context :uses_temp_dir
       let(:tmp_conf) {
-        Config.new(temp_dir)
+        Config.new(temp_dir).config
       }
       it "default confを返す" do
-        expect(tmp_conf.config[:ext]).to eq(".org")
+        expect(tmp_conf[:ext]).to eq(".org")
       end
       it "default confに正しいkeyが設定されている" do
         # pp Config.new.config
         [:template_dir, :local_help_dir, :conf_file, :editor, :ext].each do |key|
-          expect(tmp_conf.config).to have_key(key)
+          expect(tmp_conf).to have_key(key)
         end
       end
     end

@@ -1,5 +1,17 @@
 # head
 
-- hoge
+- help_title example
 
-# hage
+# license
+
+-      cc by Shigeto R. Nishitani, 2016-22
+
+# a_item
+
+- item_short_description
+- content_a
+
+# b_item
+
+- b_item
+- content_b

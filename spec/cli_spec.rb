@@ -23,6 +23,10 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     it { expect(last_command_started).to have_output(/my_help help/) }
   end
 
+  context "edit option" do
+    it "editorをsystemでopen"
+  end
+
   context "init option" do
     include_context :uses_temp_dir
     before(:each) { run_command("my_help init #{temp_dir}") }

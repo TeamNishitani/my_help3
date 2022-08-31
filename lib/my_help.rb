@@ -33,7 +33,7 @@ module MyHelp
     desc "init", "init"
 
     def init(*args)
-      config = Config.new(help_dir(args))
+      config = get_config(args)
       #config.ask_default
       init = Init.new(config.config)
       raise "Local help dir exist." if init.check_dir_exist
@@ -49,7 +49,7 @@ module MyHelp
     desc "set [:key] [VAL]", "set editor or ext"
 
     def set(*args)
-      config = Config.new(help_dir(args))
+      config = get_config(args)
       config.configure(args[0].to_sym => args[1])
       config.save_config
       conf_file_path = config.config[:conf_file]
@@ -60,20 +60,18 @@ module MyHelp
     desc "list", "list helps"
 
     def list(*args)
-      config = Config.new(help_dir(args))
-      puts List.new(config.config[:local_help_dir],
-                    config.config[:ext]).list(*args.shift)
+      config = get_config(args).config
+      puts List.new(config[:local_help_dir],
+                    config[:ext]).list(*args.shift)
     end
 
     desc "edit", "edit helps"
 
     def edit(*args)
-      c = Config.new(help_dir(args))
+      c = get_config(args).config
       help_name = args[0]
-      p help_file = File.join(c.config[:local_help_dir], help_name + c.config[:ext])
-      p comm = "#{c.config[:editor]} #{help_file}"
-      c = command_line(comm)
-      puts c
+      Modify.new(c).edit(help_name)
+      #     puts res.stdout
     end
 
     desc "hello", "hello"
@@ -84,11 +82,11 @@ module MyHelp
     end
 
     no_commands {
-      def help_dir(args)
+      def get_config(args)
         args[0] = "" if args.size == 0
         help_dir = args[-1]
         help_dir = ENV["HOME"] unless File.exist?(help_dir)
-        return help_dir
+        return Config.new(help_dir)
       end
     }
   end

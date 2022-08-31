@@ -2,22 +2,24 @@ require "fileutils"
 
 module MyHelp
   RSpec.describe Modify do
-    let(:templates_path) {
-      File.join(File.dirname(__FILE__),
-                "../../lib/templates")
+    include_context :uses_temp_dir
+    let(:tmp_conf) {
+      Config.new(temp_dir).config
     }
+    before(:each) { FileUtils.mkdir(File.join(temp_dir, ".my_help")) }
     describe "個別のヘルプをいじる" do
       it "ヘルプをnewする" do
         help_name = "example_2"
-        Modify.new(templates_path).new(help_name)
-        target = File.join(templates_path, help_name + ".org")
-        expect(File.exist?(target)).to be_truthy
+        help_file = File.join(temp_dir, ".my_help", help_name + ".org")
+        Modify.new(tmp_conf).new(help_file)
+        expect(File.exist?(help_file)).to be_truthy
       end
       it "ヘルプをdeleteする" do
         help_name = "example_2"
-        Modify.new(templates_path).delete(help_name)
-        target = File.join(templates_path, help_name + ".org")
-        expect(File.exist?(target)).to be_falsy
+        help_file = File.join(temp_dir, ".my_help", help_name + ".org")
+        FileUtils.touch(help_file)
+        Modify.new(tmp_conf).delete(help_file)
+        expect(File.exist?(help_file)).to be_falsy
       end
       it "ヘルプをeditする, system callなのでunit testではできない"
     end
