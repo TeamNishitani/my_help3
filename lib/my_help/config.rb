@@ -14,6 +14,7 @@ module MyHelp
         conf_file: File.join(local_help_dir, ".my_help_conf.yml"),
         editor: ENV["EDITOR"] || "emacs",
         ext: ".org",
+        verbose: false,
       }
       @valid_config_keys = @config.keys
       configure_with(@config[:conf_file])
@@ -42,9 +43,11 @@ module MyHelp
         config = YAML.safe_load(IO.read(path),
                                 permitted_classes: [Symbol])
       rescue Errno::ENOENT => e
-        $stderr.puts "WARNING: #{e.message}.\nUsing default conf."
+        message = "WARNING: #{e.message}.\nUsing default conf."
+        $stderr.puts message if @config[:verbose]
       rescue Psych::SyntaxError => e
-        $stderr.puts "WARNING: #{e}.\nUsing default conf."
+        message = "WARNING: #{e.message}.\nUsing default conf."
+        $stderr.puts message if @config[:verbose]
       end
       configure(config)
     end
