@@ -12,7 +12,7 @@ module MyHelp
         template_dir: File.expand_path("../templates", __dir__),
         local_help_dir: local_help_dir,
         conf_file: File.join(local_help_dir, ".my_help_conf.yml"),
-        editor: ENV["EDITOR"] || "emacs",
+        editor: ENV["EDITOR"] || "emacs -nw",
         ext: ".org",
         verbose: false,
       }

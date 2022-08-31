@@ -26,13 +26,9 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
   context "init option" do
     include_context :uses_temp_dir
     before(:each) { run_command("my_help init #{temp_dir}") }
-    #before(:each) { stop_all_commands }
-    #after { all_commands.each(&:stop) }
 
     it "confとhelpsが:local_help_dirに保存される" do
-      #      type "emacs\n
       type ".md\n"
-      #      close_input
       stop_all_commands
       conf_file = File.join(temp_dir, ".my_help", ".my_help_conf.yml")
       expect(File.exist?(conf_file)).to be_truthy
