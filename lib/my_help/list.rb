@@ -28,7 +28,7 @@ module MyHelp
           info[:desc] = line.chomp
           head = false
         end
-        status = true if m = line.match(/^\* head/)
+        head = true if m = line.match(/^\* head/)
         if m = line.match(/^\* (.+)/)
           info[:items] << m[1]
         end
@@ -55,7 +55,6 @@ module MyHelp
           next if item == "head" or item == "license"
           output << "- %s\n" % item
         end
-        #pp Org2Yaml.new()
       else
         ""
       end
