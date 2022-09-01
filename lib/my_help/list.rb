@@ -49,7 +49,7 @@ module MyHelp
     def list_help_with(name, item)
       if item == nil
         help_info = read_help(File.join(@path, name + @ext))
-        p help_info[:items]
+        #        p help_info[:items]
         output = ""
         help_info[:items].each do |item|
           next if item == "head" or item == "license"
