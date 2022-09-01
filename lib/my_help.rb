@@ -37,13 +37,13 @@ module MyHelp
       #config.ask_default
       init = Init.new(config.config)
       raise "Local help dir exist." if init.check_dir_exist
-      puts "Choose default markup '.org' [Y or '.md']? "
+      puts "Choose default markup '.org' [Y or .md]? "
       responce = $stdin.gets.chomp
       config.configure(:ext => responce) unless responce.upcase[0] == "Y"
       init.mk_help_dir
       config.save_config
       init.cp_templates
-      puts "If you want change editor use my_help set editor 'code'"
+      puts "If you want change editor use my_help set editor code."
     end
 
     desc "set [:key] [VAL]", "set editor or ext"
@@ -65,13 +65,38 @@ module MyHelp
                     config[:ext]).list(*args.shift)
     end
 
-    desc "edit", "edit helps"
+    desc "edit [HELP]", "edit help"
 
     def edit(*args)
       c = get_config(args).config
       help_name = args[0]
       Modify.new(c).edit(help_name)
       #     puts res.stdout
+    end
+
+    desc "new [HELP]", "mk new HELP"
+
+    def new(*args)
+      c = get_config(args).config
+      help_name = args[0]
+      help_file = File.join(c[:local_help_dir], help_name + c[:ext])
+      Modify.new(c).new(help_file)
+      #     puts res.stdout
+    end
+
+    desc "delete [HELP]", "delete HELP"
+
+    def delete(*args)
+      c = get_config(args).config
+      help_name = args[0]
+      help_file = File.join(c[:local_help_dir], help_name + c[:ext])
+      puts "Are you sure to delete #{help_file}? [YN]"
+      responce = $stdin.gets.chomp
+      if responce.upcase[0] == "Y"
+        Modify.new(c).delete(help_file)
+      else
+        puts "Leave #{help_file} exists."
+      end
     end
 
     desc "hello", "hello"
@@ -83,6 +108,8 @@ module MyHelp
 
     no_commands {
       def get_config(args)
+        # Rspec環境と，実動環境の差をここで吸収
+        # RSpecではargsの最後にtemp_dirをつけているから
         args[0] = "" if args.size == 0
         help_dir = args[-1]
         help_dir = ENV["HOME"] unless File.exist?(help_dir)

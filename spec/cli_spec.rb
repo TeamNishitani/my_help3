@@ -27,6 +27,43 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     it "editorをsystemでopen"
   end
 
+  context "new option" do
+    include_context :uses_temp_dir
+    let(:help_name) { "example2" }
+    let(:example_file) { File.join(temp_dir, ".my_help", help_name + ".org") }
+    before(:each) {
+      FileUtils.mkdir(File.join(temp_dir, ".my_help"))
+      run_command("my_help new #{help_name} #{temp_dir}")
+      stop_all_commands
+    }
+    it "example2が新たに作られる" do
+      #      type ".md\n"
+      expect(File.exist?(example_file)).to be_truthy
+    end
+  end
+
+  context "delete option" do
+    include_context :uses_temp_dir
+    let(:help_name) { "example2" }
+    let(:example_file) { File.join(temp_dir, ".my_help", help_name + ".org") }
+    before(:each) {
+      FileUtils.mkdir(File.join(temp_dir, ".my_help"))
+      FileUtils.touch(example_file)
+      run_command("my_help delete #{help_name} #{temp_dir}")
+    }
+    it "type Yでexample2が消される" do
+      type "Y\n"
+      stop_all_commands
+      expect(File.exist?(example_file)).to be_falsey
+    end
+    it "type Nでexample2が残る" do
+      type "N\n"
+      stop_all_commands
+      expect(last_command_started).to have_output(/Leave .+ exists./)
+      expect(File.exist?(example_file)).to be_truthy
+    end
+  end
+
   context "init option" do
     include_context :uses_temp_dir
     before(:each) { run_command("my_help init #{temp_dir}") }
