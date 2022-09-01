@@ -71,7 +71,6 @@ module MyHelp
       c = get_config(args).config
       help_name = args[0]
       Modify.new(c).edit(help_name)
-      #     puts res.stdout
     end
 
     desc "new [HELP]", "mk new HELP"

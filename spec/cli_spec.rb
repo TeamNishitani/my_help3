@@ -24,7 +24,18 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
   end
 
   context "edit option" do
+    include_context :uses_temp_dir
+    let(:help_name) { "example2" }
+    before(:each) {
+      FileUtils.mkdir(File.join(temp_dir, ".my_help"))
+      run_command("my_help edit #{help_name} #{temp_dir}")
+      stop_all_commands
+    }
     it "editorをsystemでopen"
+    it "存在しないHELPは，newしなさいと注意" do
+      output = Regexp.new("make #{help_name} first by 'new' command.")
+      expect(last_command_started).to have_output output
+    end
   end
 
   context "new option" do
@@ -37,7 +48,6 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
       stop_all_commands
     }
     it "example2が新たに作られる" do
-      #      type ".md\n"
       expect(File.exist?(example_file)).to be_truthy
     end
   end
@@ -49,18 +59,25 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     before(:each) {
       FileUtils.mkdir(File.join(temp_dir, ".my_help"))
       FileUtils.touch(example_file)
-      run_command("my_help delete #{help_name} #{temp_dir}")
     }
     it "type Yでexample2が消される" do
+      run_command("my_help delete #{help_name} #{temp_dir}")
       type "Y\n"
       stop_all_commands
       expect(File.exist?(example_file)).to be_falsey
     end
     it "type Nでexample2が残る" do
+      run_command("my_help delete #{help_name} #{temp_dir}")
       type "N\n"
       stop_all_commands
       expect(last_command_started).to have_output(/Leave .+ exists./)
       expect(File.exist?(example_file)).to be_truthy
+    end
+    it "存在しないHELPのdeleteはできない" do
+      run_command("my_help delete example1 #{temp_dir}")
+      type "Y\n"
+      stop_all_commands
+      expect(last_command_started).to have_output(/does not exist./)
     end
   end
 
@@ -68,12 +85,12 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
     include_context :uses_temp_dir
     before(:each) { run_command("my_help init #{temp_dir}") }
 
-    it "confとhelpsが:local_help_dirに保存される" do
+    it "confとhelpsがtemp_dirに保存される" do
       type ".md\n"
       stop_all_commands
       conf_file = File.join(temp_dir, ".my_help", ".my_help_conf.yml")
       expect(File.exist?(conf_file)).to be_truthy
-      puts File.read(conf_file)
+      expect(YAML.load_file(conf_file)[:ext]).to eq ".md"
       example_file = File.join(temp_dir, ".my_help", "example.md")
       expect(File.exist?(example_file)).to be_truthy
     end
@@ -82,13 +99,16 @@ RSpec.describe "my_help cli_spec.rb by aruba", type: :aruba do
 
   context "set editor code" do
     include_context :uses_temp_dir
-    before(:each) { FileUtils.mkdir(File.join(temp_dir, ".my_help")) }
-    before(:each) { run_command("my_help set editor 'code' #{temp_dir}") }
-    before(:each) { stop_all_commands }
+    before(:each) {
+      FileUtils.mkdir(File.join(temp_dir, ".my_help"))
+      run_command("my_help set editor 'code' #{temp_dir}")
+      stop_all_commands
+    }
     it "my_help/.my_help_conf.ymlに:editor = 'code'がセットされる" do
       conf_file = File.join(temp_dir, ".my_help", ".my_help_conf.yml")
       expect(File.exist?(conf_file)).to be_truthy
-      puts File.read(conf_file)
+      #      puts File.read(conf_file)
+      expect(YAML.load_file(conf_file)[:editor]).to eq "code"
     end
   end
   describe "# run_command でinteractiveにできるサンプル" do
