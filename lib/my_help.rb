@@ -45,12 +45,16 @@ module MyHelp
         case action
         when :ignore
         when :start_new_item
-          item = line.match(/\* (.+)/)[1]
+          item = read_item(line)
           @contents[item] = ""
         when :add_contents
           @contents[item] += line + "\n"
         end
       end
+    end
+
+    def read_item(line)
+      line.match(/\* (.+)/)[1]
     end
   end
 end

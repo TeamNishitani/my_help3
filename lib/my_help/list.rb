@@ -19,9 +19,8 @@ module MyHelp
 
     def read_help(file)
       info = {}
-      info[:name] = File.basename(file).split(".")[0]
       info[:items] = Org2Hash.new(File.read(file)).contents
-
+      info[:name] = File.basename(file).split(".")[0]
       return info
     end
 
@@ -30,20 +29,22 @@ module MyHelp
       Dir.glob(files).inject("") do |out, file|
         help_info = read_help(file)
         out << "%10s: %s\n" % [help_info[:name],
-                               help_info[:desc]]
+                               help_info[:items]["head"].split("\n")[0]]
       end
     end
 
     def list_help_with(name, item)
+      help_info = read_help(File.join(@path, name + @ext))
+      output = ""
+
       if item == nil
-        help_info = read_help(File.join(@path, name + @ext))
-        #        p help_info[:items]
-        output = ""
         help_info[:items].each_pair do |item, val|
-          output << "- %s\n" % item
+          item, desc = item.split(":")
+          desc ||= ""
+          output << "- %20s : %s\n" % [item, desc]
         end
       else
-        ""
+        output << help_info[:items][item]
       end
       return output
     end

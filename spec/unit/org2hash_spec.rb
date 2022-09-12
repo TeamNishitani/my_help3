@@ -18,11 +18,11 @@ module MyHelp
         expect(Org2Hash.new(org_text).text).to be_include("#+STARTUP")
       end
     end
-    describe "content" do
+    describe "contents" do
       it "returns hash" do
         expect(Org2Hash.new(org_text).contents).to be_a(Hash)
       end
-      it "returns structure" do
+      it "returns items and contents" do
         expect(Org2Hash.new(org_text).contents).to be_a(Hash)
       end
     end

@@ -52,7 +52,7 @@ module MyHelp
     def list(*args)
       config = get_config(args).config
       puts List.new(config[:local_help_dir],
-                    config[:ext]).list(*args.shift)
+                    config[:ext]).list(*args.join(" "))
     end
 
     desc "edit [HELP]", "edit help"
