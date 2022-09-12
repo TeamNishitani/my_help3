@@ -20,19 +20,7 @@ module MyHelp
     def read_help(file)
       info = {}
       info[:name] = File.basename(file).split(".")[0]
-      info[:items] = []
-      m = []
-      head = false
-      File.readlines(file).each do |line|
-        if head
-          info[:desc] = line.chomp
-          head = false
-        end
-        head = true if m = line.match(/^\* head/)
-        if m = line.match(/^\* (.+)/)
-          info[:items] << m[1]
-        end
-      end
+      info[:items] = Org2Hash.new(File.read(file)).contents
 
       return info
     end
@@ -51,8 +39,7 @@ module MyHelp
         help_info = read_help(File.join(@path, name + @ext))
         #        p help_info[:items]
         output = ""
-        help_info[:items].each do |item|
-          next if item == "head" or item == "license"
+        help_info[:items].each_pair do |item, val|
           output << "- %s\n" % item
         end
       else
