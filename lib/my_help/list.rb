@@ -34,19 +34,34 @@ module MyHelp
     end
 
     def list_help_with(name, item)
-      help_info = read_help(File.join(@path, name + @ext))
+      @help_info = read_help(File.join(@path, name + @ext))
       output = ""
 
       if item == nil
-        help_info[:items].each_pair do |item, val|
+        @help_info[:items].each_pair do |item, val|
           item, desc = item.split(":")
           desc ||= ""
           output << "- %20s : %s\n" % [item, desc]
         end
       else
-        output << help_info[:items][item]
+        output << find_near(item)
       end
       return output
+    end
+
+    def find_near(input_item)
+      candidates = []
+      @help_info[:items].each_pair do |item, val|
+        candidates << item if item.include?(input_item)
+      end
+      if candidates.size == 0
+        "No similar item name with : #{input_item}"
+      else
+        contents = candidates.collect do |near_item|
+          @help_info[:items][near_item]
+        end
+        contents.join("\n")
+      end
     end
   end
 end

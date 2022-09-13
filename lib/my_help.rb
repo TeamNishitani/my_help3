@@ -17,7 +17,7 @@ module MyHelp
   # get org and trans it to hash by FSM
   class Org2Hash
     attr_accessor :contents, :text
-    # current   new_state   action
+    # current_state => [  new_state,    action ]
     TRANSITIONS = {
       :header_read => {
         "* " => [:contents_read, :start_new_item],
