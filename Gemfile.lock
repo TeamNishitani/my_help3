@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     my_help (1.0b)
+      colorize
       command_line
       thor
 
@@ -17,6 +18,7 @@ GEM
       thor (~> 1.0)
     builder (3.2.4)
     childprocess (4.1.0)
+    colorize (0.8.1)
     command_line (2.0.1)
     contracts (0.17)
     cucumber (8.0.0)

@@ -1,4 +1,6 @@
 require_relative "./org2yml"
+#require "colorize"
+require "colorized_string"
 
 module MyHelp
   # Your code goes here...
@@ -35,7 +37,7 @@ module MyHelp
 
     def list_help_with(name, item)
       @help_info = read_help(File.join(@path, name + @ext))
-      output = "my_help : #{name}, item : #{item}\n"
+      output = ColorizedString["my_help called with name : #{name}, item : #{item}\n"].colorize(:cyan)
 
       if item == nil
         @help_info[:items].each_pair do |item, val|
@@ -58,6 +60,7 @@ module MyHelp
         "Can't find similar item name with : #{input_item}"
       else
         contents = candidates.collect do |near_item|
+          ColorizedString["item : #{near_item} \n"].colorize(:cyan) +
           @help_info[:items][near_item]
         end
         contents.join("\n")
