@@ -35,7 +35,7 @@ module MyHelp
 
     def list_help_with(name, item)
       @help_info = read_help(File.join(@path, name + @ext))
-      output = ""
+      output = "my_help : #{name}, item : #{item}\n"
 
       if item == nil
         @help_info[:items].each_pair do |item, val|
@@ -55,7 +55,7 @@ module MyHelp
         candidates << item if item.include?(input_item)
       end
       if candidates.size == 0
-        "No similar item name with : #{input_item}"
+        "Can't find similar item name with : #{input_item}"
       else
         contents = candidates.collect do |near_item|
           @help_info[:items][near_item]

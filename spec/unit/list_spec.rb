@@ -20,13 +20,13 @@ module MyHelp
         help_options = "example b_item"
         expect(List.new(templates_path).list(help_options)).to be_include(output)
       end
-      it "item名に近いitemがあるときは，そのcontentを表示" do
+      it "item名に似たitemがあるときは，そのcontentを表示" do
         output = "- content_b"
         help_options = "example b_"
         expect(List.new(templates_path).list(help_options)).to be_include(output)
       end
-      it "item名に近いitemがないときは，その旨を返す" do
-        output = "No similar item name with :"
+      it "item名に似たitemが見つからないときは，その旨を返す" do
+        output = "Can't find similar item name with :"
         help_options = "example ba_item"
         expect(List.new(templates_path).list(help_options)).to be_include(output)
       end
