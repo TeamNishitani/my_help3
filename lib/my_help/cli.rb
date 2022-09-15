@@ -20,7 +20,13 @@ module MyHelp
       puts VERSION
     end
 
-    desc "init", "init"
+    desc "git  [pull|push]", "git operations"
+
+    def git
+      puts "git opration"
+    end
+
+    desc "init", "initialize my_help environment"
 
     def init(*args)
       config = get_config(args)
@@ -36,7 +42,7 @@ module MyHelp
       puts "If you want change editor use my_help set editor code."
     end
 
-    desc "set [:key] [VAL]", "set editor or ext"
+    desc "set  [:key] [VAL]", "set editor or ext"
 
     def set(*args)
       config = get_config(args)
@@ -47,7 +53,7 @@ module MyHelp
       puts File.read(conf_file_path)
     end
 
-    desc "list", "list helps"
+    desc "list [HELP] [ITEM]", "list helps"
 
     def list(*args)
       config = get_config(args).config
@@ -63,7 +69,7 @@ module MyHelp
       Modify.new(c).edit(help_name)
     end
 
-    desc "new [HELP]", "mk new HELP"
+    desc "new  [HELP]", "mk new HELP"
 
     def new(*args)
       c = get_config(args).config
