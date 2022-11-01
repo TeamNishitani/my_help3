@@ -15,7 +15,9 @@ module MyHelp
       if item == nil && name == nil
         list_helps()
       else
-        list_help_with(name, item)
+        path = File.exists?(name + @ext) ? name + @ext :
+          File.join(@path, name + @ext)
+        list_help_with(path, name, item)
       end
     end
 
@@ -35,8 +37,10 @@ module MyHelp
       end
     end
 
-    def list_help_with(name, item)
-      @help_info = read_help(File.join(@path, name + @ext))
+    # defaultで@path/name.@extのヘルプを読み込んで，itemを表示
+    #
+    def list_help_with(path, name, item)
+      @help_info = read_help(path)
       output = ColorizedString["my_help called with name : #{name}, item : #{item}\n"].colorize(:cyan)
 
       if item == nil
